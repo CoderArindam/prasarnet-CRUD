@@ -17,6 +17,7 @@ const UserList = () => {
   //   console.log(users);
   const handleDelete = async (id) => {
     await deleteUser(id);
+    setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
     fetchUsers();
   };
 
@@ -26,9 +27,18 @@ const UserList = () => {
       <h2>All Users List</h2>
       {users.map((item, index) => (
         <div key={index}>
-          {item.name} - {item.email} - {item.phone} -{item.address}
-          <Link to={`/edit/${item._id}`}>Edit</Link>
-          <button onClick={() => handleDelete(item._id)}>Delete</button>
+          Name: <span>{item.name}</span> <br />
+          <span>Email: {item.email}</span> <br />
+          <span>
+            {item.phone} -{item.address} <br />
+          </span>{" "}
+          <br />
+          <div>
+            <Link to={`/edit/${item._id}`}>Edit</Link> <br />
+            <button onClick={() => handleDelete(item._id)}>Delete</button>
+            <br />
+          </div>
+          <br />
         </div>
       ))}
     </div>

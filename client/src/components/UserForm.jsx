@@ -13,7 +13,7 @@ const UserForm = () => {
     address: "",
   });
   const [otp, setOtp] = useState();
-  const [userOtp, setUserOtp] = useState();
+  const [userOtp, setUserOtp] = useState(0);
   useEffect(() => {
     if (id) {
       getUser(id).then((res) => setFormData(res.data));
@@ -29,16 +29,21 @@ const UserForm = () => {
     } else {
       const response = await createUser(formData);
       setOtp(response.data.newUser.otp);
-      //   if (userOtp === otp) {
-      //     navigate("/");
-      //   }
-      console.log(response);
+      if (userOtp === otp) {
+        navigate("/");
+      }
+    }
+  };
+
+  const handleOtpSubmission = (userOtp) => {
+    if (Number(userOtp) === otp) {
+      navigate("/");
     }
   };
   return (
     <>
       <div>
-        <h2>{id ? "Edit user" : "Register User"}</h2>
+        <h2 className="">{id ? "Edit user" : "Register User"}</h2>
         <form onSubmit={(e) => handleSubmit(e)}>
           <input
             type="text"
@@ -70,14 +75,29 @@ const UserForm = () => {
               setFormData({ ...formData, address: e.target.value })
             }
           />
-          {otp && (
-            <div>
-              <p>Generated OTP:{otp}</p>
-              <input type="number" placeholder="enter your otp" />
-            </div>
+
+          {!otp && (
+            <>
+              <button type="submit">
+                {id ? "Update user" : "Register user"}
+              </button>
+            </>
           )}
-          <button type="submit">{id ? "update user" : "register user"}</button>
         </form>
+        {otp && (
+          <div>
+            <p>Generated OTP:{otp}</p>
+            <input
+              type="number"
+              placeholder="enter your otp"
+              onChange={(e) => setUserOtp(e.target.value)}
+              value={userOtp}
+            />
+            <button onClick={() => handleOtpSubmission(userOtp)}>
+              Submit Otp
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
